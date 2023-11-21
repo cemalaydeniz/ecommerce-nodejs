@@ -12,18 +12,18 @@ const register = async(req, res) => {
     const { name, email, password, phone, address } = req.body;
 
     if (typeof password !== 'string')
-        return res.status(400).json(jsonResponse.generateErrorResponse('Wrong parameter'));
+        return res.status(400).json(jsonResponse.error('Wrong parameter'));
     if (password.length < 6 || password.length > 128)
-        return res.status(400).json(jsonResponse.generateErrorResponse('The password must be between 6 and 128 characters'));
+        return res.status(400).json(jsonResponse.error('The password must be between 6 and 128 characters'));
 
     // The password must include at least a number and a character
     const passwordRegex = /^(?=.*[0-9])(?=.*[a-zA-Z]).+$/;
     if (!passwordRegex.test(password))
-        return res.status(400).json(jsonResponse.generateErrorResponse('The password must include at least a number and a character'));
+        return res.status(400).json(jsonResponse.error('The password must include at least a number and a character'));
 
     const emailExists = await User.findOne({ emailAddress: email });
     if (emailExists)
-        return res.status(400).json(jsonResponse.generateErrorResponse('This email address already exists'));
+        return res.status(400).json(jsonResponse.error('This email address already exists'));
 
     const hashedPassword = await bcrypt.hash(password, 6);
     try {
@@ -36,10 +36,10 @@ const register = async(req, res) => {
         });
     }
     catch(error) {
-        return res.status(400).json(jsonResponse.generateErrorResponse(error.message));
+        return res.status(400).json(jsonResponse.error(error.message));
     }
 
-    res.status(201).json(jsonResponse.generateSuccessResponse('The user has been created successfully'));
+    res.status(201).json(jsonResponse.success('The user has been created successfully'));
 };
 
 const login = async(req, res) => {
@@ -47,11 +47,11 @@ const login = async(req, res) => {
     
     const user = await User.findOne({ emailAddress: email });
     if (!user)
-        return res.status(404).json(jsonResponse.generateErrorResponse('The email address or the password is wrong'));
+        return res.status(404).json(jsonResponse.error('The email address or the password is wrong'));
 
     const isPasswordValid = await bcrypt.compare(password, user.password);
     if (!isPasswordValid)
-        return res.status(401).json(jsonResponse.generateErrorResponse('The email address or the password is wrong'));
+        return res.status(401).json(jsonResponse.error('The email address or the password is wrong'));
 
     const token = jwt.sign({ "id": user._id, "email": user.emailAddress, "roles": user.roles }, process.env.JWT_SECRET_KEY, { expiresIn: process.env.JWT_LIFESPAN });
 
@@ -62,7 +62,7 @@ const login = async(req, res) => {
         signed: true,
     });
 
-    res.status(200).json(jsonResponse.generateDataResponse({'token': token}));
+    res.status(200).json(jsonResponse.data({'token': token}));
 };
 
 const logout = async(req, res) => {
@@ -71,7 +71,7 @@ const logout = async(req, res) => {
         expires: new Date(Date.now() + 1000),
     });
 
-    res.status(200).json(jsonResponse.generateSuccessResponse('Successfully logged out'));
+    res.status(200).json(jsonResponse.success('Successfully logged out'));
 };
 //~ End
 
@@ -82,16 +82,16 @@ const updateProfile = async(req, res) => {
 
     const user = await User.findById(req.user.id);
     if (!user)
-        return res.status(404).json(jsonResponse.generateErrorResponse('User not found'));
+        return res.status(404).json(jsonResponse.error('User not found'));
 
     if (!name && !address)
-        return res.status(200).json(jsonResponse.generateSuccessResponse('No changes were made'));
+        return res.status(200).json(jsonResponse.success('No changes were made'));
 
     if (name) user.name = name;
     if (address) user.address = address;
     await user.save();
 
-    res.status(200).json(jsonResponse.generateSuccessResponse('The profile has been updated'));
+    res.status(200).json(jsonResponse.success('The profile has been updated'));
 };
 //~ End
 

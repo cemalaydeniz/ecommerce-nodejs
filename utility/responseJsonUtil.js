@@ -1,18 +1,18 @@
-function generateSuccessResponse(message) {
+function success(message) {
     return {
         'success': true,
         'message': message
     };
 }
 
-function generateErrorResponse(error) {
+function error(error) {
     return {
         'success': false,
         'error': error
     };
 }
 
-function generateDataResponse(data, message) {
+function data(data, message) {
     return {
         'success': true,
         'data': data,
@@ -21,7 +21,7 @@ function generateDataResponse(data, message) {
 }
 
 module.exports = {
-    generateSuccessResponse,
-    generateErrorResponse,
-    generateDataResponse,
+    success,
+    error,
+    data,
 };
