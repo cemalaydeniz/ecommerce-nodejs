@@ -1,0 +1,1 @@
+module.exports = errorHandler => (req, res, next) => Promise.resolve(errorHandler(req, res, next)).catch(next);
