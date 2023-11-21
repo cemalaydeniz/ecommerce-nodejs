@@ -6,7 +6,7 @@ const express = require('express');
 const app = express();
 
 // Packages
-// ...
+const cookieParser = require('cookie-parser');
 
 // Database
 const connectDB = require('./db/connect');
@@ -16,6 +16,7 @@ const userRouter = require('./routers/userRouter');
 
 
 app.use(express.json());
+app.use(cookieParser(process.env.JWT_SECRET_KEY));
 
 app.use('/api/v1/users', userRouter);
 

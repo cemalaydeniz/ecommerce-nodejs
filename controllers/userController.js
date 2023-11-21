@@ -1,5 +1,9 @@
+require('dotenv').config();
+
 const jsonResponse = require('../utility/responseJsonUtil');
 const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
+const timeUtil = require('../utility/timeUtil');
 
 const User = require('../models/user');
 
@@ -36,6 +40,30 @@ const register = async(req, res) => {
     res.status(201).json(jsonResponse.generateSuccessResponse('The user has been created successfully'));
 };
 
+const login = async(req, res) => {
+    const { email, password } = req.body;
+    
+    const user = await User.findOne({ emailAddress: email });
+    if (!user)
+        return res.status(404).json(jsonResponse.generateErrorResponse('The email address or the password is wrong'));
+
+    const isPasswordValid = await bcrypt.compare(password, user.password);
+    if (!isPasswordValid)
+        return res.status(401).json(jsonResponse.generateErrorResponse('The email address or the password is wrong'));
+
+    const token = jwt.sign({ "id": user._id, "email": user.emailAddress }, process.env.JWT_SECRET_KEY, { expiresIn: process.env.JWT_LIFESPAN });
+
+    res.cookie('token', token, {
+        httpOnly: true,
+        expires: new Date(Date.now() + timeUtil.returnTimeInMilliseconds(24, 0, 0)),
+        secure: true,
+        signed: true,
+    });
+
+    res.status(200).json(jsonResponse.generateDataResponse({'token': token}));
+};
+
 module.exports = {
     register,
+    login,
 };
