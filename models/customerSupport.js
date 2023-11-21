@@ -24,4 +24,4 @@ const CustomerSupportSchema = mongoose.Schema({
     messages: [ MessageSchema ],
 });
 
-module.exports = mongoose.model(CustomerSupportSchema);
+module.exports = mongoose.model('CustomerSupport', CustomerSupportSchema);

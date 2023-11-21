@@ -13,4 +13,4 @@ const ProductSchema = mongoose.Schema({
     description: String,
 });
 
-module.exports = mongoose.model(ProductSchema);
+module.exports = mongoose.model('Product', ProductSchema);

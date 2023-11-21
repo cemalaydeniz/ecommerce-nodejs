@@ -12,8 +12,6 @@ const OrderSchema = mongoose.Schema({
     }
 });
 
-const Order = mongoose.model('Order', OrderSchema);
-
 const UserSchema = mongoose.Schema({
     roles: {
         type: Array,
@@ -59,9 +57,4 @@ const UserSchema = mongoose.Schema({
     },
 });
 
-const User = mongoose.model('User', UserSchema);
-
-module.exports = {
-    User,
-    Order
-};
+module.exports = mongoose.model('User', UserSchema);

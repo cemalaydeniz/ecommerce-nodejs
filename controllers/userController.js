@@ -1,6 +1,6 @@
 const jsonResponse = require('../utility/responseJsonUtil');
 
-const { User } = require('../models/user');
+const User = require('../models/user');
 
 const register = async(req, res) => {
     const { name, email, phone, address } = req.body;
