@@ -84,15 +84,15 @@ const bulkAdd = async(req, res) => {
         return res.status(400).json(jsonResponse.success('Bad request'));
 
     const session = await mongoose.startSession();
-    session.startTransaction();
+    await session.startTransaction();
     try {
         await Product.create(products, { session: session });
         await session.commitTransaction();
-        session.endSession();
+        await session.endSession();
     }
     catch (error) {
         await session.abortTransaction();
-        session.endSession();
+        await session.endSession();
         return res.status(500).json(jsonResponse.success(error.message));
     }
     
