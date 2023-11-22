@@ -10,6 +10,8 @@ const User = require('../models/user');
 //~ Begin - Login-Register APIs
 const register = async(req, res) => {
     const { name, email, password, phone, address } = req.body;
+    if (!name && !email && !password)
+        return res.status(400).json(jsonResponse.success('Bad request'));
 
     if (typeof password !== 'string')
         return res.status(400).json(jsonResponse.error('Wrong parameter'));
@@ -26,24 +28,21 @@ const register = async(req, res) => {
         return res.status(400).json(jsonResponse.error('This email address already exists'));
 
     const hashedPassword = await bcrypt.hash(password, 6);
-    try {
-        await User.create({
-            name,
-            emailAddress: email,
-            password: hashedPassword,
-            phoneNumber: phone,
-            address,
-        });
-    }
-    catch(error) {
-        return res.status(400).json(jsonResponse.error(error.message));
-    }
+    await User.create({
+        name,
+        emailAddress: email,
+        password: hashedPassword,
+        phoneNumber: phone,
+        address,
+    });
 
     res.status(201).json(jsonResponse.success('The user has been created successfully'));
 };
 
 const login = async(req, res) => {
     const { email, password } = req.body;
+    if (!email && !password)
+        return res.status(400).json(jsonResponse.success('Bad request'));
     
     const user = await User.findOne({ emailAddress: email });
     if (!user)
@@ -79,13 +78,12 @@ const logout = async(req, res) => {
 //~ Begin -Profile APIs
 const updateProfile = async(req, res) => {
     const { name, address } = req.body;
+    if (!name && !address)
+        return res.status(200).json(jsonResponse.success('No changes were made'));
 
     const user = await User.findById(req.user.id);
     if (!user)
         return res.status(404).json(jsonResponse.error('User not found'));
-
-    if (!name && !address)
-        return res.status(200).json(jsonResponse.success('No changes were made'));
 
     if (name) user.name = name;
     if (address) user.address = address;
