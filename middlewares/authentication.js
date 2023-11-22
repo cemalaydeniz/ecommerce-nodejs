@@ -13,16 +13,25 @@ const authenticateUser = (req, res, next) => {
         next();
     }
     catch (error) {
-        res.status(401).json(jsonResponse.error('Unauthorized'));
+        res.status(500).json(jsonResponse.error(error.message));
     }
 };
 
 const authenticateRole = (...roles) => {
     return (req, res, next) => {
-        if (!roles.includes(req.user.roles))
-            return res.status(403).json(jsonResponse.error('Forbidden'));
+        try {
+            for (const element of roles) {
+                if (req.user.roles.includes(element))
+                    continue;
 
-        next();
+                return res.status(403).json(jsonResponse.error('Forbidden'));
+            }
+
+            next();
+        }
+        catch (error) {
+            res.status(500).json(jsonResponse.error(error.message));
+        }
     };
 };
 

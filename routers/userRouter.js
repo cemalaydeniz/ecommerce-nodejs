@@ -9,6 +9,6 @@ router.post('/register', errorHandler(controller.register));
 router.post('/login', errorHandler(controller.login));
 router.get('/logout', errorHandler(controller.logout));
 
-router.put('/updateProfile', errorHandler(authentication.authenticateUser), errorHandler(controller.updateProfile));
+router.put('/updateProfile', authentication.authenticateUser, errorHandler(controller.updateProfile));
 
 module.exports = router;
