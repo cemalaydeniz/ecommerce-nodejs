@@ -118,7 +118,7 @@ const bulkEdit = async(req, res) => {
         }
 
         await session.commitTransaction();
-        session.endSession();
+        await session.endSession();
     }
     catch (error) {
         await session.abortTransaction();
