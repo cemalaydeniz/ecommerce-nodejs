@@ -9,6 +9,7 @@ router.post('/', [authentication.authenticateUser, authentication.authenticateRo
 
 router.route('/:id')
     .get(errorHandler(controller.getProduct))
-    .put([authentication.authenticateUser, authentication.authenticateRole('admin')], errorHandler(controller.updateProduct));
+    .put([authentication.authenticateUser, authentication.authenticateRole('admin')], errorHandler(controller.updateProduct))
+    .delete([authentication.authenticateUser, authentication.authenticateRole('admin')], errorHandler(controller.deleteProduct));
 
 module.exports = router;
