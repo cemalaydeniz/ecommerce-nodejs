@@ -4,7 +4,10 @@ const Product = require('../models/products');
 
 const newProduct = async(req, res) => {
     const { name, price, description } = req.body;
-    if (!name && !price && !description)
+    if (price && (isNaN(price) || price < 0))
+        return res.status(400).json(jsonResponse.error('Bad request'));
+
+    if (!name && !description)
         return res.status(400).json(jsonResponse.success('Bad request'));
 
     await Product.create({ name, price, description });
