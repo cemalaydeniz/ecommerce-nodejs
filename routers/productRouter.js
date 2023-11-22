@@ -9,7 +9,8 @@ router.post('/', [authentication.authenticateUser, authentication.authenticateRo
 
 router.get('/search', errorHandler(controller.searchProducts));
 
-router.put('/bulk-add', [authentication.authenticateUser, authentication.authenticateRole('admin')], errorHandler(controller.bulkAdd));
+router.post('/bulk-add', [authentication.authenticateUser, authentication.authenticateRole('admin')], errorHandler(controller.bulkAdd));
+router.put('/bulk-edit', [authentication.authenticateUser, authentication.authenticateRole('admin')], errorHandler(controller.bulkEdit));
 
 router.route('/:id')
     .get(errorHandler(controller.getProduct))

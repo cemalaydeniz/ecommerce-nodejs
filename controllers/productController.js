@@ -99,6 +99,36 @@ const bulkAdd = async(req, res) => {
     res.status(200).json(jsonResponse.success('Bulk addition has been completed successfully'));
 };
 
+const bulkEdit = async(req, res) => {
+    const { products } = req.body;
+    if (!products || products.length == 0)
+        return res.status(400).json(jsonResponse.success('Bad request'));
+
+    const session = await mongoose.startSession();
+    await session.startTransaction();
+    try {
+        for (const item of products) {
+            let product = await Product.findById(item.id);
+            
+            if (item.name) product.name = item.name;
+            if (item.price) product.price = item.price;
+            if (item.description) product.description = item.description;
+
+            await product.save({ session: session});
+        }
+
+        await session.commitTransaction();
+        session.endSession();
+    }
+    catch (error) {
+        await session.abortTransaction();
+        await session.endSession();
+        return res.status(500).json(jsonResponse.success(error.message));
+    }
+
+    res.status(200).json(jsonResponse.success('Bulk editing has been completed successfully'));
+};
+
 module.exports = {
     newProduct,
     getProduct,
@@ -107,4 +137,5 @@ module.exports = {
     searchProducts,
 
     bulkAdd,
+    bulkEdit,
 };
