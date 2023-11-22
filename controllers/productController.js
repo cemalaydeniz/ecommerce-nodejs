@@ -1,4 +1,5 @@
 const jsonResponse = require('../utility/responseJsonUtil');
+const mongoose = require('mongoose');
 
 const Product = require('../models/products');
 
@@ -78,11 +79,24 @@ const searchProducts = async(req, res) => {
 };
 
 const bulkAdd = async(req, res) => {
+    const { products } = req.body;
+    if (!products || products.length == 0)
+        return res.status(400).json(jsonResponse.success('Bad request'));
 
-};
-
-const bulkEdit = async(req, res) => {
-
+    const session = await mongoose.startSession();
+    session.startTransaction();
+    try {
+        await Product.create(products, { session: session });
+        await session.commitTransaction();
+        session.endSession();
+    }
+    catch (error) {
+        await session.abortTransaction();
+        session.endSession();
+        return res.status(500).json(jsonResponse.success(error.message));
+    }
+    
+    res.status(200).json(jsonResponse.success('Bulk addition has been completed successfully'));
 };
 
 module.exports = {
@@ -91,4 +105,6 @@ module.exports = {
     updateProduct,
     deleteProduct,
     searchProducts,
+
+    bulkAdd,
 };

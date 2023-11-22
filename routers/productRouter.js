@@ -9,6 +9,8 @@ router.post('/', [authentication.authenticateUser, authentication.authenticateRo
 
 router.get('/search', errorHandler(controller.searchProducts));
 
+router.put('/bulk-add', [authentication.authenticateUser, authentication.authenticateRole('admin')], errorHandler(controller.bulkAdd));
+
 router.route('/:id')
     .get(errorHandler(controller.getProduct))
     .put([authentication.authenticateUser, authentication.authenticateRole('admin')], errorHandler(controller.updateProduct))
