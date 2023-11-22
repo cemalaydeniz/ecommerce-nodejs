@@ -13,14 +13,14 @@ const authenticateUser = (req, res, next) => {
         next();
     }
     catch (error) {
-        res.status(401).json(jsonResponse.generateErrorResponse('Unauthorized'));
+        res.status(401).json(jsonResponse.error('Unauthorized'));
     }
 };
 
 const authenticateRole = (...roles) => {
     return (req, res, next) => {
         if (!roles.includes(req.user.roles))
-            return res.status(403).json(jsonResponse.generateErrorResponse('Forbidden'));
+            return res.status(403).json(jsonResponse.error('Forbidden'));
 
         next();
     };
