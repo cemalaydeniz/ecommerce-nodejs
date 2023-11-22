@@ -13,11 +13,13 @@ function error(error) {
 }
 
 function data(data, message) {
-    return {
+    let result = {
         'success': true,
-        'data': data,
-        'message': message
+        'data': data
     };
+    if (message) result.message = message;
+
+    return result;
 }
 
 module.exports = {
