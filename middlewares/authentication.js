@@ -3,7 +3,7 @@ require('dotenv').config();
 const jsonResponse = require('../utility/responseJsonUtil');
 const jwt = require('jsonwebtoken');
 
-const authenticateUser = async(req, res, next) => {
+const authenticateUser = (req, res, next) => {
     try {
         const token = req.signedCookies.token;
         const { id, email, roles } = jwt.verify(token, process.env.JWT_SECRET_KEY);
@@ -17,11 +17,13 @@ const authenticateUser = async(req, res, next) => {
     }
 };
 
-const authenticateRole = async(...roles) => {
-    if (!roles.includes(req.user.roles))
-        return res.status(403).json(jsonResponse.generateErrorResponse('Forbidden'));
+const authenticateRole = (...roles) => {
+    return (req, res, next) => {
+        if (!roles.includes(req.user.roles))
+            return res.status(403).json(jsonResponse.generateErrorResponse('Forbidden'));
 
-    next();
+        next();
+    };
 };
 
 module.exports = {
