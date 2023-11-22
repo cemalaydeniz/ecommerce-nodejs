@@ -11,6 +11,7 @@ router.get('/search', errorHandler(controller.searchProducts));
 
 router.post('/bulk-add', [authentication.authenticateUser, authentication.authenticateRole('admin')], errorHandler(controller.bulkAdd));
 router.put('/bulk-edit', [authentication.authenticateUser, authentication.authenticateRole('admin')], errorHandler(controller.bulkEdit));
+router.delete('/bulk-delete', [authentication.authenticateUser, authentication.authenticateRole('admin')], errorHandler(controller.bulkEdit));
 
 router.route('/:id')
     .get(errorHandler(controller.getProduct))

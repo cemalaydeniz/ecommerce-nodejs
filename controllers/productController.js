@@ -129,6 +129,27 @@ const bulkEdit = async(req, res) => {
     res.status(200).json(jsonResponse.success('Bulk editing has been completed successfully'));
 };
 
+const bulkDelete = async (req, res) => {
+    const { ids } = req.body;
+    if (!ids || ids.length == 0)
+        return res.status(400).json(jsonResponse.success('Bad request'));
+
+    const session = await mongoose.startSession();
+    await session.startTransaction();
+    try {
+        await Product.deleteMany({ _id: {$in: ids}});
+        await session.commitTransaction();
+        await session.endSession();
+    }
+    catch (error) {
+        await session.abortTransaction();
+        await session.endSession();
+        return res.status(500).json(jsonResponse.success(error.message));
+    }
+
+    res.status(200).json(jsonResponse.success('Bulk deleting has been completed successfully'));
+};
+
 module.exports = {
     newProduct,
     getProduct,
@@ -138,4 +159,5 @@ module.exports = {
 
     bulkAdd,
     bulkEdit,
+    bulkDelete,
 };
