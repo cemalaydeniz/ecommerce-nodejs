@@ -52,6 +52,7 @@ const UserSchema = mongoose.Schema({
     orders: [ OrderSchema ],
     createdAt : {
         type: Date,
+        immutable: true,
         default: () => Date.now(),
     }
 });
