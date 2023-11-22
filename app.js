@@ -13,12 +13,14 @@ const connectDB = require('./db/connect');
 
 // Routers
 const userRouter = require('./routers/userRouter');
+const productRouter = require('./routers/productRouter');
 
 
 app.use(express.json());
 app.use(cookieParser(process.env.JWT_SECRET_KEY));
 
 app.use('/api/v1/users', userRouter);
+app.use('/api/v1/products', productRouter);
 
 
 const initialize = async() => {
