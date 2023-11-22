@@ -7,6 +7,8 @@ const authentication = require('../middlewares/authentication');
 
 router.post('/', [authentication.authenticateUser, authentication.authenticateRole('admin')], errorHandler(controller.newProduct));
 
+router.get('/search', errorHandler(controller.searchProducts));
+
 router.route('/:id')
     .get(errorHandler(controller.getProduct))
     .put([authentication.authenticateUser, authentication.authenticateRole('admin')], errorHandler(controller.updateProduct))

@@ -61,9 +61,34 @@ const deleteProduct = async(req, res) => {
     res.status(200).json(jsonResponse.success('The product has been deleted'));
 };
 
+const searchProducts = async(req, res) => {
+    const name = req.query.name;
+    if (!name)
+        return res.status(400).json(jsonResponse.success('Bad request'));
+
+    const page = req.query.page && req.query.page > 1 ? req.query.page : 1;
+    const query = {
+        name: new RegExp(name, 'i'),
+    };
+
+    const pageSize = 10;        // This can be in the environment variables
+    const products = await Product.find(query).skip((page - 1) * pageSize).limit(pageSize);
+
+    res.status(200).json(jsonResponse.data(products));
+};
+
+const bulkAdd = async(req, res) => {
+
+};
+
+const bulkEdit = async(req, res) => {
+
+};
+
 module.exports = {
     newProduct,
     getProduct,
     updateProduct,
     deleteProduct,
+    searchProducts,
 };
