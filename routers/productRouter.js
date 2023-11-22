@@ -7,4 +7,7 @@ const authentication = require('../middlewares/authentication');
 
 router.post('/', [authentication.authenticateUser, authentication.authenticateRole('admin')], errorHandler(controller.newProduct));
 
+router.route('/:id')
+    .get(errorHandler(controller.getProduct));
+
 module.exports = router;
