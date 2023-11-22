@@ -40,7 +40,7 @@ const updateProduct = async(req, res) => {
     if (!name && !description)
         return res.status(200).json(jsonResponse.success('No changes were made'));
 
-    const product = await Product.findOne({ _id: id })
+    let product = await Product.findOne({ _id: id })
     if (!product)
         return res.status(404).json(jsonResponse.error('Product not found'));
 

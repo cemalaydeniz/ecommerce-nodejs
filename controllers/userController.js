@@ -81,7 +81,7 @@ const updateProfile = async(req, res) => {
     if (!name && !address)
         return res.status(200).json(jsonResponse.success('No changes were made'));
 
-    const user = await User.findById(req.user.id);
+    let user = await User.findById(req.user.id);
     if (!user)
         return res.status(404).json(jsonResponse.error('User not found'));
 
