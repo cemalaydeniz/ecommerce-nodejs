@@ -70,6 +70,7 @@ const searchProducts = async(req, res) => {
     const page = req.query.page && req.query.page > 1 ? req.query.page : 1;
     const query = {
         name: new RegExp(name, 'i'),
+        isDeleted: { $ne: true }
     };
 
     const pageSize = 10;        // This can be in the environment variables
@@ -137,7 +138,7 @@ const bulkDelete = async (req, res) => {
     const session = await mongoose.startSession();
     await session.startTransaction();
     try {
-        await Product.deleteMany({ _id: {$in: ids}});
+        await Product.updateMany({ _id: {$in: ids}}, { $set: { isDeleted: true }});
         await session.commitTransaction();
         await session.endSession();
     }
