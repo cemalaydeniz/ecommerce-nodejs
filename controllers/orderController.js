@@ -15,7 +15,7 @@ const pay = async(req, res) => {
     const productIds = cart.map(item => item.id);
 
     const products = await Product.find({ _id: { $in: productIds }});
-    if (products.length != productIds.length)
+    if (!products || products.length != productIds.length)
         return res.status(400).json(jsonResponse.error('Bad request'));
 
     const totalAmount = 0;
