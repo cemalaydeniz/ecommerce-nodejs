@@ -55,6 +55,9 @@ const response = async(req, res) => {
     if (!req.user.roles.includes('admin') && ticket.messages[0].senderId != req.user.id)
         return res.status(403).json(jsonResponses.error('Forbidden'));
 
+    if (ticket.isClosed)
+        return res.status(400).json(jsonResponses.error('The ticket is already closed'));
+
     ticket.messages.push({
         senderId: req.user.id,
         content: message
@@ -65,7 +68,24 @@ const response = async(req, res) => {
     res.status(200).json(jsonResponses.success('The message has been sent'));
 };
 
+const closeTicket = async(req, res) => {
+    const { ticketId } = req.params;
+
+    const ticket = await CustomerSupport.findOne({ _id: ticketId });
+    if (!ticket)
+        return res.status(400).json(jsonResponses.error('Bad request'));
+
+    if (ticket.isClosed)
+        return res.status(400).json(jsonResponses.error('The ticket is already closed'));
+
+    ticket.isClosed = true;
+    await ticket.save();
+
+    res.status(200).json(jsonResponses.success('The ticket has been closed'));
+};
+
 module.exports = {
     newTicket,
     response,
+    closeTicket,
 };

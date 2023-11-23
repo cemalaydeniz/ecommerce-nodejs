@@ -23,6 +23,10 @@ const CustomerSupportSchema = mongoose.Schema({
         required: true,
     },
     messages: [ MessageSchema ],
+    isClosed: {
+        type: Boolean,
+        default: false,
+    },
 });
 
 module.exports = mongoose.model('Customer-Support', CustomerSupportSchema);
