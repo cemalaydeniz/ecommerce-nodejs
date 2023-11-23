@@ -105,27 +105,14 @@ const bulkEdit = async(req, res) => {
     if (!products || products.length == 0)
         return res.status(400).json(jsonResponse.success('Bad request'));
 
-    const session = await mongoose.startSession();
-    await session.startTransaction();
-    try {
-        for (const item of products) {
-            let product = await Product.findById(item.id);
-            
-            if (item.name) product.name = item.name;
-            if (item.price) product.price = item.price;
-            if (item.description) product.description = item.description;
-
-            await product.save({ session: session});
+    const query = products.map((value) => ({
+        updateOne: {
+            filter: { _id: value.id },
+            update: { $set: value }
         }
+    }));
 
-        await session.commitTransaction();
-        await session.endSession();
-    }
-    catch (error) {
-        await session.abortTransaction();
-        await session.endSession();
-        return res.status(500).json(jsonResponse.success(error.message));
-    }
+    await Product.bulkWrite(query, { runValidation: true });
 
     res.status(200).json(jsonResponse.success('Bulk editing has been completed successfully'));
 };
