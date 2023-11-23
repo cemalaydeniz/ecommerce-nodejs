@@ -47,8 +47,10 @@ const paymentCheck = async(req, res) => {
     const endpointSecret = process.env.STRIPE_ENDPOINT_KEY;
     const event = stripe.webhooks.constructEvent(req.body, signature, endpointSecret);
 
-    await Order.create(event.data.object.metadata.cart);
-    
+    if (event.type == 'payment_intent.succeeded') {
+        await Order.create(event.data.object.metadata.cart);
+    }
+
     res.status(200).end();
 };
 
