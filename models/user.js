@@ -1,20 +1,8 @@
 const mongoose = require('mongoose');
 
-const OrderSchema = mongoose.Schema({
-    id: mongoose.SchemaTypes.ObjectId,
-    quantity: {
-        type: Number,
-        min: 1,
-        validate: {
-            validator: Number.isInteger,
-            message: 'The quantity is not an integer'
-        },
-    }
-});
-
 const UserSchema = mongoose.Schema({
     roles: {
-        type: Array,
+        type: [String],
         default: ['user'],
     },
     name: {
@@ -49,7 +37,6 @@ const UserSchema = mongoose.Schema({
         type: String,
         maxLength: 255,
     },
-    orders: [ OrderSchema ],
     createdAt : {
         type: Date,
         immutable: true,
