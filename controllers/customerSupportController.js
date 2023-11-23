@@ -43,6 +43,29 @@ const newSupport = async(req, res) => {
     res.status(201).json(jsonResponses.success('The support ticket has been created'));
 };
 
+const response = async(req, res) => {
+    const { message } = req.body;
+    const { ticketId } = req.params;
+
+    const ticket = await CustomerSupport.findOne({ _id: ticketId });
+    if (!ticket)
+        return res.status(400).json(jsonResponses.error('Bad request'));
+
+    // In order to check who can add a message to the ticket. Only the owner and the ones with the admin role can add messages
+    if (!req.user.roles.includes('admin') && ticket.messages[0].senderId != req.user.id)
+        return res.status(403).json(jsonResponses.error('Forbidden'));
+
+    ticket.messages.push({
+        senderId: req.user.id,
+        content: message
+    });
+
+    await ticket.save();
+
+    res.status(200).json(jsonResponses.success('The message has been sent'));
+};
+
 module.exports = {
     newSupport,
+    response,
 };
