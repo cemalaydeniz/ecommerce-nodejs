@@ -2,7 +2,7 @@ function isValidJSON(array, keys) {
     if (array.length === 0)
         return false;
 
-    for (const item in array) {
+    for (const item of array) {
         if (!item || typeof item !== 'object')
             return false;
 

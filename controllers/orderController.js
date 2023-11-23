@@ -24,7 +24,7 @@ const pay = async(req, res) => {
     }
 
     // Add user ID to the cart in order to make inserting data process easy in the webhook
-    for (let item in cart) {
+    for (let item of cart) {
         item['userId'] = req.user.id;
     }
 
