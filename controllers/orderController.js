@@ -39,7 +39,7 @@ const pay = async(req, res) => {
         receipt_email: req.user.email,
     });
 
-    res.status(200).json(jsonResponse.data({ clientSecret: paymentIntent.client_secret }));
+    res.status(200).json(jsonResponse.data(true, paymentIntent.client_secret));
 };
 
 const paymentCheck = async(req, res) => {

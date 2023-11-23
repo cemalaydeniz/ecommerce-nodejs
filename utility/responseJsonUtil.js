@@ -12,9 +12,9 @@ function error(error) {
     };
 }
 
-function data(data, message) {
+function data(isSuccessful, data, message) {
     let result = {
-        'success': true,
+        'success': isSuccessful,
         'data': data
     };
     if (message) result.message = message;

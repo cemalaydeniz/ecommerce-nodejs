@@ -61,7 +61,7 @@ const login = async(req, res) => {
         signed: true,
     });
 
-    res.status(200).json(jsonResponse.data({'token': token}));
+    res.status(200).json(jsonResponse.data(true, token));
 };
 
 const logout = async(req, res) => {

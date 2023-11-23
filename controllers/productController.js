@@ -25,7 +25,7 @@ const getProduct = async(req, res) => {
     if (!product)
         return res.status(404).json(jsonResponse.error('Product not found'));
 
-    res.status(200).json(jsonResponse.data(product));
+    res.status(200).json(jsonResponse.data(true, product));
 };
 
 const updateProduct = async(req, res) => {
@@ -76,7 +76,7 @@ const searchProducts = async(req, res) => {
     const pageSize = 10;        // This can be in the environment variables
     const products = await Product.find(query).skip((page - 1) * pageSize).limit(pageSize);
 
-    res.status(200).json(jsonResponse.data(products));
+    res.status(200).json(jsonResponse.data(true, products));
 };
 
 const bulkAdd = async(req, res) => {
