@@ -1,8 +1,8 @@
 const mongoose = require('mongoose');
 
 const MessageSchema = mongoose.Schema({
-    sender: {
-        type: String,
+    senderId: {
+        type: mongoose.SchemaTypes.ObjectId,
         required: true,
     },
     content: {
@@ -10,18 +10,19 @@ const MessageSchema = mongoose.Schema({
         required: true,
         maxLength: 1000,
     },
+    created: {
+        type: Date,
+        immutable: true,
+        default: () => Date.now(),
+    },
 });
 
 const CustomerSupportSchema = mongoose.Schema({
-    senderId: {
+    orderId: {
         type: mongoose.SchemaTypes.ObjectId,
-        required: true,
-    },
-    senderName: {
-        type: String,
         required: true,
     },
     messages: [ MessageSchema ],
 });
 
-module.exports = mongoose.model('CustomerSupport', CustomerSupportSchema);
+module.exports = mongoose.model('Customer-Support', CustomerSupportSchema);

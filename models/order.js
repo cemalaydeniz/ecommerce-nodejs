@@ -10,7 +10,8 @@ const OrderSchema = mongoose.Schema({
             validator: Number.isInteger,
             message: 'The quantity is not an integer'
         },
-    }
+    },
+    supportTicketId: mongoose.SchemaTypes.ObjectId,
 });
 
 module.exports = mongoose.model('Order', OrderSchema);
