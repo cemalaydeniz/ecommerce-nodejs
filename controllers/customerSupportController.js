@@ -5,7 +5,7 @@ const jsonResponses = require('../utility/responseJsonUtil');
 const Order = require('../models/order');
 const CustomerSupport = require('../models/customerSupport');
 
-const newSupport = async(req, res) => {
+const newTicket = async(req, res) => {
     const { message } = req.body;
     const { orderId } = req.params;
 
@@ -66,6 +66,6 @@ const response = async(req, res) => {
 };
 
 module.exports = {
-    newSupport,
+    newTicket,
     response,
 };

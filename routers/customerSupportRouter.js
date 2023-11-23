@@ -6,6 +6,6 @@ const controller = require('../controllers/customerSupportController');
 const authentication = require('../middlewares/authentication');
 
 router.post('/response/:ticketId', authentication.authenticateUser, errorHandler(controller.response));
-router.post('/:orderId', authentication.authenticateUser, errorHandler(controller.newSupport));
+router.post('/:orderId', authentication.authenticateUser, errorHandler(controller.newTicket));
 
 module.exports = router;
